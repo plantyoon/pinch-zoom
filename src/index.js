@@ -1,4 +1,4 @@
-import { hasFile, firstFile, typeOfFile, getImage, canvasToBlob, blobToFile, fileToFormData, sendFormData, clear, rotate, drawCrop } from './utils';
+import { hasFile, firstFile, typeOfFile, getImage, canvasToBlob, blobToFile, fileToFormData, sendFormData, size, clear, rotate, drawCrop, getCanvasPosition } from './utils';
 import { Tag, LockElement } from './dom';
 
 import './css/main.css';
@@ -9,7 +9,7 @@ const winowToCanvas = (canvas, x, y) => {
     x: (x - left) * (canvas.width / width),
     y: (y - top) * (canvas.height / height),
   };
-}
+};
 
 const pinchZoom = new class PinchZoom {
   constructor() {
@@ -35,21 +35,31 @@ const pinchZoom = new class PinchZoom {
     getImage('https://thumbs.gfycat.com/CandidClumsyGypsymoth-max-1mb.gif')
       .then((img) => this.photo = img)
       .then(() => {
-        this.cx = this.photo.width / 2;
-        this.cy = this.photo.height / 2;
-        const dPhotoWidth = this.photo.width  * this.cr;
-        const dPhotoHeight = this.photo.height * this.cr;
-
-        this.draw(
-          this.photo,
-          this.cx,
-          this.cy,
-          dPhotoWidth,
-          dPhotoHeight
-        );
+        window.onresize();
+        this.init();
       });
 
+    window.onresize = () => {
+      size(this.canvas, innerWidth, innerHeight);
+      this.border = [0, 0, this.canvas.width, this.canvas.height];
+    };
+
     document.body.appendChild(this.canvas);
+  }
+
+  init() {
+    this.cx = this.photo.width / 2;
+    this.cy = this.photo.height / 2;
+    const dPhotoWidth = this.photo.width  * this.cr;
+    const dPhotoHeight = this.photo.height * this.cr;
+
+    this.draw(
+      this.photo,
+      this.cx,
+      this.cy,
+      dPhotoWidth,
+      dPhotoHeight
+    );
   }
 
   test() {

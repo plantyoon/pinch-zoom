@@ -38,6 +38,11 @@ export const sendFormData = (fd, src, f = () => {}) => {
   });
 };
 
+export const size = (canvas, w, h) => {
+  canvas.width = w;
+  canvas.height = h;
+};
+
 export const clear = (v) => {
   if (v instanceof HTMLCanvasElement) v.getContext('2d').clearRect(0, 0, v.width, v.height);
   if (v instanceof CanvasRenderingContext2D) v.clearRect(0, 0, v.canvas.width, v.canvas.height);
@@ -91,4 +96,12 @@ export const drawCrop = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0.5) => 
   if (ch > ih) ch = ih;
 
   ctx.drawImage(img, cx, cy, cw, ch,  x, y, w, h);
+};
+
+export const getCanvasPosition = (canvas, x, y) => {
+  const { width, height, left, top } = canvas.getBoundingClientRect();
+  return {
+    x: (x - left) * (canvas.width / width),
+    y: (y - top) * (canvas.height / height),
+  };
 };
